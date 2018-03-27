@@ -40,7 +40,7 @@ if [[ ! -f "/etc/nginx/sites-available/$APPSETTINGS" ]] || ! grep -q "#\\ Versio
     fi
 
     if sudo sed -i "s@FPMVERSION@$FPMVERSION@g" \
-        "/etc/nginx/sites-available/snippets/php.atomic.conf" || \
+        "/etc/nginx/snippets/php.atomic.conf" || \
         { echo -e "${RED}Modifying FPMVERSION in Nginx file failed.$ENDCOLOR"; exit 1; }; then
         echo -e "Updated config file with correct PHP Version $CYAN$FPMVERSION$ENDCOLOR"
     fi
