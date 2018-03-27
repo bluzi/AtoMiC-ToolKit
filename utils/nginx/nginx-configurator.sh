@@ -31,6 +31,18 @@ sudo chmod 755 -R /var/www
 sudo chown -R www-data:www-data /var/www
 echo "Set the correct folder permissions on /var/www for user www-data"
 
+########## AtoMiC-ToolKit Snippets ##########
+# Copies any missing snippet files over but doesnt enable them.
+for f in $SCRIPTPATH/utils/nginx/snippets/*.conf; do
+    filename=$(basename $f)
+    if [[ ! -f /etc/nginx/snippets/$filename ]]; then
+        if cp $f "/etc/nginx/snippets/$filename" || \
+            { echo -e "${RED}Could not move snippet file $filename over.$ENDCOLOR"; exit 1; }; then
+            echo "Snippet file $filename copied over"
+        fi
+    fi
+done
+
 ########## AtoMiC-ToolKit server.atomic.conf ##########
 if [[ ! -f "/etc/nginx/sites-available/$APPSETTINGS" ]] || ! grep -q "#\\ Version=2.0" "/etc/nginx/sites-available/$APPSETTINGS"; then
     if  cp "$SCRIPTPATH/utils/nginx/sites-available/$APPSETTINGS" \
@@ -75,18 +87,6 @@ for f in $SCRIPTPATH/utils/nginx/locations-available/*.conf; do
         if cp $f "/etc/nginx/locations-available/$filename" || \
             { echo -e "${RED}Could not move location file $filename over.$ENDCOLOR"; exit 1; }; then
             echo "Location file $filename copied over"
-        fi
-    fi
-done
-
-########## AtoMiC-ToolKit Snippets ##########
-# Copies any missing snippet files over but doesnt enable them.
-for f in $SCRIPTPATH/utils/nginx/snippets/*.conf; do
-    filename=$(basename $f)
-    if [[ ! -f /etc/nginx/snippets/$filename ]]; then
-        if cp $f "/etc/nginx/snippets/$filename" || \
-            { echo -e "${RED}Could not move snippet file $filename over.$ENDCOLOR"; exit 1; }; then
-            echo "Snippet file $filename copied over"
         fi
     fi
 done
